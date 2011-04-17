@@ -1,5 +1,5 @@
 /*
-  Copyright 2006-2010 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2006-2011 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -61,7 +61,7 @@ import org.pdfclown.util.NotImplementedException;
   PDF document [PDF:1.6:3.6.1].
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.1.0
+  @version 0.1.0.1, 04/17/11
 */
 @PDF(VersionEnum.PDF10)
 public final class Document
@@ -724,10 +724,7 @@ public final class Document
     if(value == null)
     {getBaseDataObject().remove(PdfName.Version);}
     else
-    {
-      checkCompatibility("version");
-      getBaseDataObject().put(PdfName.Version, new PdfName(value.toString()));
-    }
+    {getBaseDataObject().put(PdfName.Version, new PdfName(value.toString()));}
   }
 
   /**

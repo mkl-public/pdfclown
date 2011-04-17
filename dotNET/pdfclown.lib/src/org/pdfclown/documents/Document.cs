@@ -1,5 +1,5 @@
 /*
-  Copyright 2006-2010 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2006-2011 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -605,10 +605,7 @@ namespace org.pdfclown.documents
         return (version.CompareTo(fileVersion) > 0 ? version : fileVersion);
       }
       set
-      {
-        CheckCompatibility("Version");
-        BaseDataObject[PdfName.Version] = new PdfName(value.ToString());
-      }
+      {BaseDataObject[PdfName.Version] = new PdfName(value.ToString());}
     }
 
     /**
