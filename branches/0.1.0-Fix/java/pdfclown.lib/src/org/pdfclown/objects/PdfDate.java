@@ -1,5 +1,5 @@
 /*
-  Copyright 2006-2010 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2006-2011 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -34,7 +34,7 @@ import org.pdfclown.tokens.Encoding;
   PDF date object [PDF:1.6:3.8.3].
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.1.0
+  @version 0.1.0.1, 04/19/11
 */
 public final class PdfDate
   extends PdfString
@@ -59,32 +59,30 @@ public final class PdfDate
     String value
     )
   {
-    //TODO:IMPL this code is quite ugly... is there a more elegant solution (regex)?
-    // Normalize datetime value.
-    // Cut leading "D:" tag!
-    value = value.substring(2);
-    int length = value.length();
-    switch(length)
+    StringBuilder dateBuilder = new StringBuilder();
     {
-      case 8: // Date only.
-        value += "000000+0000";
-        break;
-      case 14: // Datetime without timezone.
-        value += "+0000";
-        break;
-      case 15: // Datetime at UT timezone ("Z" tag).
-        value = value.substring(0,length-1) + "+0000";
-        break;
-      case 18: // Datetime at non-UT timezone without minutes.
-        value = value.substring(0,length-1) + "00";
-        break;
-      case 21: // Datetime at non-UT full timezone ("'mm'" PDF timezone-minutes format).
-        value = value.substring(0,length-1).replace("\'","");
-        break;
+      int length = value.length();
+      // Year (YYYY).
+      dateBuilder.append(value.substring(2, 6)); // NOTE: Skips the "D:" prefix; Year is mandatory.
+      // Month (MM).
+      dateBuilder.append(length < 7 ? "01" : value.substring(6, 8));
+      // Day (DD).
+      dateBuilder.append(length < 9 ? "01" : value.substring(8, 10));
+      // Hour (HH).
+      dateBuilder.append(length < 11 ? "00" : value.substring(10, 12));
+      // Minute (mm).
+      dateBuilder.append(length < 13 ? "00" : value.substring(12, 14));
+      // Second (SS).
+      dateBuilder.append(length < 15 ? "00" : value.substring(14, 16));
+      // Local time / Universal Time relationship (O).
+      dateBuilder.append(length < 16 || value.substring(16, 17).equals("Z") ? "+" : value.substring(16, 17));
+      // UT Hour offset (HH').
+      dateBuilder.append(length < 19 ? "00" : value.substring(17, 19));
+      // UT Minute offset (mm').
+      dateBuilder.append(length < 22 ? "00" : value.substring(20, 22));
     }
-
     try
-    {return formatter.parse(value);}
+    {return formatter.parse(dateBuilder.toString());}
     catch(Exception e)
     {throw new RuntimeException(e);}
   }
