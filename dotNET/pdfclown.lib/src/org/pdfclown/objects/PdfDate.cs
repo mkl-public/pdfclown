@@ -65,7 +65,7 @@ namespace org.pdfclown.objects
         dateBuilder.Append(":").Append(length < 22 ? "00" : value.Substring(20, 2));
       }
       return DateTime.ParseExact(
-        value,
+        dateBuilder.ToString(),
         "yyyyMMddHHmmsszzz",
         new CultureInfo("en-US")
         );
