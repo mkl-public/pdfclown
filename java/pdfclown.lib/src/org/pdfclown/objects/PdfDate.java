@@ -65,17 +65,17 @@ public final class PdfDate
       // Year (YYYY).
       dateBuilder.append(value.substring(2, 6)); // NOTE: Skips the "D:" prefix; Year is mandatory.
       // Month (MM).
-      dateBuilder.append(length < 7 ? "01" : value.substring(6, 8));
+      dateBuilder.append(length < 8 ? "01" : value.substring(6, 8));
       // Day (DD).
-      dateBuilder.append(length < 9 ? "01" : value.substring(8, 10));
+      dateBuilder.append(length < 10 ? "01" : value.substring(8, 10));
       // Hour (HH).
-      dateBuilder.append(length < 11 ? "00" : value.substring(10, 12));
+      dateBuilder.append(length < 12 ? "00" : value.substring(10, 12));
       // Minute (mm).
-      dateBuilder.append(length < 13 ? "00" : value.substring(12, 14));
+      dateBuilder.append(length < 14 ? "00" : value.substring(12, 14));
       // Second (SS).
-      dateBuilder.append(length < 15 ? "00" : value.substring(14, 16));
+      dateBuilder.append(length < 16 ? "00" : value.substring(14, 16));
       // Local time / Universal Time relationship (O).
-      dateBuilder.append(length < 16 || value.substring(16, 17).equals("Z") ? "+" : value.substring(16, 17));
+      dateBuilder.append(length < 17 || value.substring(16, 17).equals("Z") ? "+" : value.substring(16, 17));
       // UT Hour offset (HH').
       dateBuilder.append(length < 19 ? "00" : value.substring(17, 19));
       // UT Minute offset (mm').
