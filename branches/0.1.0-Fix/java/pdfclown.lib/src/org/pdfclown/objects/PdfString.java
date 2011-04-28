@@ -100,9 +100,9 @@ public class PdfString
   {}
 
   public PdfString(
-    byte[] value
+    byte[] rawValue
     )
-  {setRawValue(value);}
+  {setRawValue(rawValue);}
 
   public PdfString(
     String value
@@ -110,12 +110,12 @@ public class PdfString
   {setValue(value);}
 
   public PdfString(
-    byte[] value,
+    byte[] rawValue,
     SerializationModeEnum serializationMode
     )
   {
     setSerializationMode(serializationMode);
-    setRawValue(value);
+    setRawValue(rawValue);
   }
 
   public PdfString(
