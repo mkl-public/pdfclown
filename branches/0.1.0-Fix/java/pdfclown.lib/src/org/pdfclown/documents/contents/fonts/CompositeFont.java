@@ -25,6 +25,11 @@
 
 package org.pdfclown.documents.contents.fonts;
 
+import java.awt.geom.Point2D;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.pdfclown.PDF;
 import org.pdfclown.VersionEnum;
 import org.pdfclown.bytes.Buffer;
@@ -45,11 +50,6 @@ import org.pdfclown.util.BiMap;
 import org.pdfclown.util.ByteArray;
 import org.pdfclown.util.ConvertUtils;
 import org.pdfclown.util.NotImplementedException;
-
-import java.awt.geom.Point2D;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
   Composite font, also called Type 0 font [PDF:1.6:5.6].
@@ -170,8 +170,8 @@ public abstract class CompositeFont
         BiMap<ByteArray,Integer> ucs2CMap;
         {
           PdfDictionary cidSystemInfo = (PdfDictionary)getCIDFontDictionary().resolve(PdfName.CIDSystemInfo);
-          String registry = (String)((PdfTextString)cidSystemInfo.get(PdfName.Registry)).getValue();
-          String ordering = (String)((PdfTextString)cidSystemInfo.get(PdfName.Ordering)).getValue();
+          String registry = ((PdfTextString)cidSystemInfo.get(PdfName.Registry)).getValue();
+          String ordering = ((PdfTextString)cidSystemInfo.get(PdfName.Ordering)).getValue();
           String ucs2CMapName = registry + "-" + ordering + "-" + "UCS2";
           ucs2CMap = new BiMap<ByteArray,Integer>(CMap.get(ucs2CMapName));
         }
@@ -426,7 +426,7 @@ public abstract class CompositeFont
         charCodeBytesIndex++
         )
       {
-        String hex = Integer.toHexString((int)charCode[charCodeBytesIndex]);
+        String hex = Integer.toHexString(charCode[charCodeBytesIndex]);
         //TODO:improve hex padding!!!
         if(hex.length() == 1)
         {hex = "0" + hex;}
@@ -602,19 +602,11 @@ public abstract class CompositeFont
         new PdfInteger(100)
         );
       // FontFile.
-  //TODO:IMPL distinguish between truetype (FontDescriptor.FontFile2) and opentype (FontDescriptor.FontFile3 and FontStream.subtype=OpenType)!!!
-      PdfReference fontFileReference = getFile().register(
-        new PdfStream(
-          new PdfDictionary(
-            new PdfName[]{PdfName.Subtype},
-            new PdfDirectObject[]{PdfName.OpenType}
-            ),
-          new Buffer(parser.fontData.toByteArray())
-          )
-        );
       fontDescriptor.put(
-        PdfName.FontFile3,
-        fontFileReference
+        PdfName.FontFile2,
+        getFile().register(
+          new PdfStream(new Buffer(parser.fontData.toByteArray()))
+          )
         );
     }
     return getFile().register(fontDescriptor);
