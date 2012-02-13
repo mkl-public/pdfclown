@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2011 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2008-2012 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -126,21 +126,17 @@ namespace org.pdfclown.documents.interaction.forms
 
     /**
       <summary>Gets/Sets the maximum length of the field's text, in characters.</summary>
+      <remarks>It corresponds to the maximum integer value in case no explicit limit is defined.</remarks>
     */
     public int MaxLength
     {
       get
       {
-        PdfInteger maxLengthObject = (PdfInteger)File.Resolve(
-          GetInheritableAttribute(PdfName.MaxLen)
-          );
-        if(maxLengthObject == null)
-          return Int32.MaxValue;
-
-        return maxLengthObject.RawValue;
+        PdfInteger maxLengthObject = (PdfInteger)File.Resolve(GetInheritableAttribute(PdfName.MaxLen));
+        return maxLengthObject != null ? maxLengthObject.IntValue : Int32.MaxValue;
       }
       set
-      {throw new NotImplementedException();}
+      {BaseDataObject[PdfName.MaxLen] = (value != Int32.MaxValue ? new PdfInteger(value) : null);}
     }
 
     /**
@@ -167,7 +163,15 @@ namespace org.pdfclown.documents.interaction.forms
       {return base.Value;}
       set
       {
-        BaseDataObject[PdfName.V] = new PdfTextString((string)value);
+        string stringValue = (string)value;
+        if(stringValue != null)
+        {
+          int maxLength = MaxLength;
+          if(stringValue.Length > maxLength)
+          {stringValue = stringValue.Remove(maxLength);}
+        }
+
+        BaseDataObject[PdfName.V] = new PdfTextString(stringValue);
         RefreshAppearance();
       }
     }
@@ -336,15 +340,6 @@ namespace org.pdfclown.documents.interaction.forms
       PrimitiveComposer baseComposer = composer.BaseComposer;
       ContentScanner scanner = baseComposer.Scanner;
       RectangleF textBox = scanner.ContentContext.Box;
-      textBox.X += 2;
-      textBox.Y += 2;
-      textBox.Width -= 4;
-      textBox.Height -= 4;
-      composer.Begin(
-        textBox,
-        Justification.ToAlignmentX(),
-        IsMultiline ? AlignmentYEnum.Top : AlignmentYEnum.Middle
-        );
       if(scanner.State.Font == null)
       {
         /*
@@ -352,10 +347,56 @@ namespace org.pdfclown.documents.interaction.forms
           a function of the height of the annotation rectangle.
         */
         if(fontSize == 0)
-        {fontSize = textBox.Height * 0.9;}
+        {fontSize = textBox.Height * 0.65;}
         baseComposer.SetFont(fontName, fontSize);
       }
-      composer.ShowText((string)Value);
+
+      string text = (string)Value;
+
+      FlagsEnum flags = Flags;
+      if((flags & FlagsEnum.Comb) == FlagsEnum.Comb
+        && (flags & FlagsEnum.FileSelect) == 0
+        && (flags & FlagsEnum.Multiline) == 0
+        && (flags & FlagsEnum.Password) == 0)
+      {
+        int maxLength = MaxLength;
+        if(maxLength > 0)
+        {
+          textBox.Width /= maxLength;
+          for(int index = 0, length = text.Length; index < length; index++)
+          {
+            composer.Begin(
+              textBox,
+              AlignmentXEnum.Center,
+              AlignmentYEnum.Middle
+              );
+            composer.ShowText(text[index].ToString());
+            composer.End();
+            textBox.X += textBox.Width;
+          }
+          return;
+        }
+      }
+
+      textBox.X += 2;
+      textBox.Width -= 4;
+      AlignmentYEnum yAlignment;
+      if((flags & FlagsEnum.Multiline) == FlagsEnum.Multiline)
+      {
+        yAlignment = AlignmentYEnum.Top;
+        textBox.Y += (float)(fontSize * .35);
+        textBox.Height -= (float)(fontSize * .7);
+      }
+      else
+      {
+        yAlignment = AlignmentYEnum.Middle;
+      }
+      composer.Begin(
+        textBox,
+        Justification.ToAlignmentX(),
+        yAlignment
+        );
+      composer.ShowText(text);
       composer.End();
     }
     #endregion
