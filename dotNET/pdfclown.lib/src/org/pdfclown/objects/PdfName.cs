@@ -1,5 +1,5 @@
 /*
-  Copyright 2006-2011 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2006-2012 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -111,6 +111,7 @@ namespace org.pdfclown.objects
     public static readonly PdfName CapHeight = new PdfName("CapHeight");
     public static readonly PdfName Caret = new PdfName("Caret");
     public static readonly PdfName Catalog = new PdfName("Catalog");
+    public static readonly PdfName Category = new PdfName("Category");
     public static readonly PdfName CCF = new PdfName("CCF");
     public static readonly PdfName CCITTFaxDecode = new PdfName("CCITTFaxDecode");
     public static readonly PdfName CenterWindow = new PdfName("CenterWindow");
@@ -184,6 +185,7 @@ namespace org.pdfclown.objects
     public static readonly PdfName ExportState = new PdfName("ExportState");
     public static readonly PdfName Extends = new PdfName("Extends");
     public static readonly PdfName ExtGState = new PdfName("ExtGState");
+    public static readonly PdfName Event = new PdfName("Event");
     public static readonly PdfName F = new PdfName("F");
     public static readonly PdfName Fade = new PdfName("Fade");
     public static readonly PdfName FB = new PdfName("FB");
@@ -479,6 +481,18 @@ namespace org.pdfclown.objects
     #pragma warning restore 0108
 
     private static readonly byte[] NamePrefixChunk = tokens.Encoding.Encode(tokens.Keyword.NamePrefix);
+    #endregion
+
+    #region interface
+    #region public
+    /**
+      <summary>Gets the object equivalent to the given value.</summary>
+    */
+    public static PdfName Get(
+      string value
+      )
+    {return value == null ? null : new PdfName(value);}
+    #endregion
     #endregion
     #endregion
 
