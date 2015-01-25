@@ -23,7 +23,7 @@ import org.pdfclown.tools.PageStamper;
   etc.</p>
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.1.2, 11/30/12
+  @version 0.2.0, 1/24/15
 */
 public class PageNumberingSample
   extends Sample
@@ -80,7 +80,7 @@ public class PageNumberingSample
         foreground.setFillColor(redColor);
 
         Dimension2D pageSize = page.getSize();
-        int pageNumber = page.getIndex() + 1;
+        int pageNumber = page.getNumber();
         boolean pageIsEven = (pageNumber % 2 == 0);
         foreground.showText(
           Integer.toString(pageNumber),

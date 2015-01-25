@@ -22,7 +22,7 @@ import org.pdfclown.files.File;
   each single content object within a page.</p>
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.1.2, 09/24/12
+  @version 0.2.0, 1/24/15
 */
 public class ContentScanningSample
   extends Sample
@@ -128,7 +128,7 @@ public class ContentScanningSample
         {
           Rectangle2D box = objectWrapper.getBox(); // Image position (location and size) on the page.
           System.out.println(
-            " on page " + (page.getIndex() + 1) + " (" + page.getBaseObject() + ")" // Page index and indirect reference.
+            " on page " + page.getNumber() + " (" + page.getBaseObject() + ")" // Page index and indirect reference.
             );
           System.out.println("  Coordinates:");
           System.out.println("     x: " + Math.round(box.getX()));

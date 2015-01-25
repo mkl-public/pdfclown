@@ -23,7 +23,7 @@ import org.pdfclown.util.math.geom.Quad;
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.1.1
-  @version 0.1.2, 09/24/12
+  @version 0.2.0, 1/24/15
 */
 public class TextHighlightSample
   extends Sample
@@ -50,7 +50,7 @@ public class TextHighlightSample
     TextExtractor textExtractor = new TextExtractor(true, true);
     for(final Page page : file.getDocument().getPages())
     {
-      System.out.println("\nScanning page " + (page.getIndex()+1) + "...\n");
+      System.out.println("\nScanning page " + page.getNumber() + "...\n");
 
       // 2.1. Extract the page text!
       Map<Rectangle2D,List<ITextString>> textStrings = textExtractor.extract(page);

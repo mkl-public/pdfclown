@@ -34,7 +34,7 @@ import org.pdfclown.tools.TextExtractor;
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.8
-  @version 0.1.2, 09/24/12
+  @version 0.2.0, 1/24/15
 */
 public class LinkParsingSample
   extends Sample
@@ -181,7 +181,7 @@ public class LinkParsingSample
     if(pageRef instanceof Page)
     {
       Page page = (Page)pageRef;
-      System.out.println((page.getIndex()+1) + " [ID: " + page.getBaseObject() + "]");
+      System.out.println(page.getNumber() + " [ID: " + page.getBaseObject() + "]");
     }
     else
     {System.out.println(((Integer)pageRef+1));}

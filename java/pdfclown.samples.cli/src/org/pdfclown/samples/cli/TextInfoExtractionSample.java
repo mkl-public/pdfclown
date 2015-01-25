@@ -22,7 +22,7 @@ import org.pdfclown.tools.PageStamper;
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.8
-  @version 0.1.2, 09/24/12
+  @version 0.2.0, 1/24/15
 */
 public class TextInfoExtractionSample
   extends Sample
@@ -55,7 +55,7 @@ public class TextInfoExtractionSample
     // 2. Iterating through the document pages...
     for(Page page : document.getPages())
     {
-      System.out.println("\nScanning page " + (page.getIndex()+1) + "...\n");
+      System.out.println("\nScanning page " + page.getNumber() + "...\n");
 
       stamper.setPage(page);
 
