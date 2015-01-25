@@ -20,7 +20,7 @@ import org.pdfclown.tools.PageManager;
   splits of groups of pages.
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.1.2, 12/21/12
+  @version 0.2.0, 1/24/15
 */
 public class PageManagementSample
   extends Sample
@@ -91,7 +91,7 @@ public class PageManagementSample
             incrementalDataSize += pageDifferentialDataSize;
 
             System.out.println(
-              "Page " + (page.getIndex()+1) + ": "
+              "Page " + page.getNumber() + ": "
                 + pageFullDataSize + " (full); "
                 + pageDifferentialDataSize + " (differential); "
                 + incrementalDataSize + " (incremental)"

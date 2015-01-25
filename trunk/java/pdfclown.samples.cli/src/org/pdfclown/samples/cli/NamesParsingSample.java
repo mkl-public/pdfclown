@@ -17,7 +17,7 @@ import org.pdfclown.objects.PdfString;
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.8
-  @version 0.1.2, 09/24/12
+  @version 0.2.0, 1/24/15
 */
 public class NamesParsingSample extends Sample
 {
@@ -67,7 +67,7 @@ public class NamesParsingSample extends Sample
             else // NOTE: explicit page refs are typical of local destinations.
             {
               Page page = (Page)pageRef;
-              System.out.println((page.getIndex() + 1) + "; ID = " + ((PdfReference)page.getBaseObject()).getId());
+              System.out.println(page.getNumber() + "; ID = " + ((PdfReference)page.getBaseObject()).getId());
             }
           }
 

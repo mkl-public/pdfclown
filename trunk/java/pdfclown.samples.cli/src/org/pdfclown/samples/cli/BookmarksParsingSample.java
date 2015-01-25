@@ -21,7 +21,7 @@ import org.pdfclown.objects.PdfObjectWrapper;
   This sample demonstrates <b>how to inspect the bookmarks</b> of a PDF document.
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.1.2, 11/30/12
+  @version 0.2.0, 1/24/15
 */
 public class BookmarksParsingSample
   extends Sample
@@ -130,7 +130,7 @@ public class BookmarksParsingSample
     if(pageRef instanceof Page)
     {
       Page page = (Page)pageRef;
-      System.out.println((page.getIndex()+1) + " [ID: " + page.getBaseObject() + "]");
+      System.out.println(page.getNumber() + " [ID: " + page.getBaseObject() + "]");
     }
     else
     {System.out.println(((Integer)pageRef+1));}
