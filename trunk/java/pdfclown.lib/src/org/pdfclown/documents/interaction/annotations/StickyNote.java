@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2013 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2008-2015 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -42,11 +42,11 @@ import org.pdfclown.objects.PdfName;
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.7
-  @version 0.1.3, 01/22/13
+  @version 0.1.2.1, 03/21/15
 */
 @PDF(VersionEnum.PDF10)
-public final class Note
-  extends Markup
+public final class StickyNote
+  extends Markup<StickyNote>
 {
   // <class>
   // <classes>
@@ -55,9 +55,6 @@ public final class Note
   */
   public enum IconTypeEnum
   {
-    // <class>
-    // <static>
-    // <fields>
     /**
       Comment.
     */
@@ -86,10 +83,7 @@ public final class Note
       Paragraph.
     */
     Paragraph(PdfName.Paragraph);
-    // </fields>
 
-    // <interface>
-    // <public>
     /**
       Gets the highlighting mode corresponding to the given value.
     */
@@ -104,37 +98,30 @@ public final class Note
       }
       return null;
     }
-    // </public>
-    // </interface>
-    // </static>
 
-    // <dynamic>
-    // <fields>
     private final PdfName code;
-    // </fields>
 
-    // <constructors>
     private IconTypeEnum(
       PdfName code
       )
     {this.code = code;}
-    // </constructors>
 
-    // <interface>
-    // <public>
     public PdfName getCode(
       )
     {return code;}
-    // </public>
-    // </interface>
-    // </dynamic>
-    // </class>
   }
   // </classes>
 
+  // <static>
+  // <fields>
+  private static final IconTypeEnum DefaultIconType = IconTypeEnum.Note;
+  private static final boolean DefaultOpen = false;
+  // </fields>
+  // </static>
+  
   // <dynamic>
   // <constructors>
-  public Note(
+  public StickyNote(
     Page page,
     Point2D location,
     String text
@@ -148,7 +135,7 @@ public final class Note
       );
   }
 
-  Note(
+  StickyNote(
     PdfDirectObject baseObject
     )
   {super(baseObject);}
@@ -157,10 +144,10 @@ public final class Note
   // <interface>
   // <public>
   @Override
-  public Note clone(
+  public StickyNote clone(
     Document context
     )
-  {return (Note)super.clone(context);}
+  {return (StickyNote)super.clone(context);}
 
   /**
     Gets the icon to be used in displaying the annotation.
@@ -168,14 +155,8 @@ public final class Note
   public IconTypeEnum getIconType(
     )
   {
-    /*
-      NOTE: 'Name' entry may be undefined.
-    */
     PdfName nameObject = (PdfName)getBaseDataObject().get(PdfName.Name);
-    if(nameObject == null)
-      return IconTypeEnum.Note;
-
-    return IconTypeEnum.get(nameObject);
+    return nameObject != null ? IconTypeEnum.get(nameObject) : DefaultIconType;
   }
 
   /**
@@ -185,9 +166,7 @@ public final class Note
     )
   {
     PdfBoolean openObject = (PdfBoolean)getBaseDataObject().get(PdfName.Open);
-    return openObject != null
-      ? openObject.getValue()
-      : false;
+    return openObject != null ? openObject.getValue() : DefaultOpen;
   }
 
 //TODO:State and StateModel!!!
@@ -198,7 +177,7 @@ public final class Note
   public void setIconType(
     IconTypeEnum value
     )
-  {getBaseDataObject().put(PdfName.Name, value.getCode());}
+  {getBaseDataObject().put(PdfName.Name, value != null && value != DefaultIconType ? value.getCode() : null);}
 
   /**
     @see #isOpen()
@@ -206,7 +185,29 @@ public final class Note
   public void setOpen(
     boolean value
     )
-  {getBaseDataObject().put(PdfName.Open, PdfBoolean.get(value));}
+  {getBaseDataObject().put(PdfName.Open, value != DefaultOpen ? PdfBoolean.get(value) : null);}
+
+  /**
+    @see #setIconType(IconTypeEnum)
+  */
+  public StickyNote withIconType(
+    IconTypeEnum value
+    )
+  {
+    setIconType(value);
+    return self();
+  }
+
+  /**
+    @see #setOpen(boolean)
+  */
+  public StickyNote withOpen(
+    boolean value
+    )
+  {
+    setOpen(value);
+    return self();
+  }
   // </public>
   // </interface>
   // </dynamic>

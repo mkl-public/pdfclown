@@ -1,5 +1,5 @@
 /*
-  Copyright 2013 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2013-2015 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -25,18 +25,21 @@
 
 using org.pdfclown.bytes;
 using org.pdfclown.documents;
+using org.pdfclown.documents.contents;
 using org.pdfclown.objects;
 using org.pdfclown.util;
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace org.pdfclown.documents.interaction.annotations
 {
   /**
     <summary>Markup annotation [PDF:1.6:8.4.5].</summary>
+    <remarks>It represents text-based annotations used primarily to mark up documents.</remarks>
   */
-  [PDF(VersionEnum.PDF10)]
+  [PDF(VersionEnum.PDF11)]
   public abstract class Markup
     : Annotation
   {
@@ -60,7 +63,7 @@ namespace org.pdfclown.documents.interaction.annotations
       RectangleF box,
       string text
       ) : base(page, subtype, box, text)
-    {}
+    {CreationDate = DateTime.Now;}
 
     protected Markup(
       PdfDirectObject baseObject
@@ -76,7 +79,7 @@ namespace org.pdfclown.documents.interaction.annotations
       and border) but not to the popup window that appears when the annotation is opened.</remarks>
     */
     [PDF(VersionEnum.PDF14)]
-    public double Alpha
+    public virtual double Alpha
     {
       get
       {return (double)PdfSimpleObject<object>.GetValue(BaseDataObject[PdfName.CA], 1d);}
@@ -85,13 +88,33 @@ namespace org.pdfclown.documents.interaction.annotations
     }
 
     /**
+      <summary>Gets/Sets the annotation editor. It is displayed as a text label in the title bar of
+      the annotation's pop-up window when open and active. By convention, it identifies the user who
+      added the annotation.</summary>
+    */
+    [PDF(VersionEnum.PDF11)]
+    public virtual string Author
+    {
+      get
+      {return (string)PdfSimpleObject<object>.GetValue(BaseDataObject[PdfName.T]);}
+      set
+      {
+        BaseDataObject[PdfName.T] = PdfTextString.Get(value);
+        ModificationDate = DateTime.Now;
+      }
+    }
+
+    /**
       <summary>Gets/Sets the date and time when the annotation was created.</summary>
     */
     [PDF(VersionEnum.PDF15)]
-    public DateTime? CreationDate
+    public virtual DateTime? CreationDate
     {
       get
-      {return (DateTime?)PdfSimpleObject<object>.GetValue(BaseDataObject[PdfName.CreationDate]);}
+      {
+        PdfDirectObject creationDateObject = BaseDataObject[PdfName.CreationDate];
+        return creationDateObject is PdfDate ? (DateTime?)((PdfDate)creationDateObject).Value : null;
+      }
       set
       {BaseDataObject[PdfName.CreationDate] = PdfDate.Get(value);}
     }
@@ -103,7 +126,7 @@ namespace org.pdfclown.documents.interaction.annotations
       <see cref="ReplyType"/> property.</remarks>
     */
     [PDF(VersionEnum.PDF15)]
-    public Annotation InReplyTo
+    public virtual Annotation InReplyTo
     {
       get
       {return Annotation.Wrap(BaseDataObject[PdfName.IRT]);}
@@ -112,30 +135,20 @@ namespace org.pdfclown.documents.interaction.annotations
     }
 
     /**
-      <summary>Gets/Sets a pop-up annotation for entering or editing the text associated with this
-      annotation.</summary>
+      <summary>Gets/Sets the pop-up annotation associated with this one.</summary>
+      <exception cref="InvalidOperationException">If pop-up annotations can't be associated with
+      this markup.</exception>
     */
     [PDF(VersionEnum.PDF13)]
-    public Popup Popup
+    public virtual Popup Popup
     {
       get
       {return (Popup)Annotation.Wrap(BaseDataObject[PdfName.Popup]);}
       set
-      {BaseDataObject[PdfName.Popup] = PdfObjectWrapper.GetBaseObject(value);}
-    }
-
-    /**
-      <summary>Gets/Sets the text label to be displayed in the title bar of the annotation's pop-up
-      window when open and active.</summary>
-      <remarks>By convention, this entry identifies the user who added the annotation.</remarks>
-    */
-    [PDF(VersionEnum.PDF11)]
-    public string PopupTitle
-    {
-      get
-      {return (string)PdfSimpleObject<object>.GetValue(BaseDataObject[PdfName.T]);}
-      set
-      {BaseDataObject[PdfName.T] = PdfTextString.Get(value);}
+      {
+        value.Markup = this;
+        BaseDataObject[PdfName.Popup] = value.BaseObject;
+      }
     }
 
     /**
@@ -143,7 +156,7 @@ namespace org.pdfclown.documents.interaction.annotations
       <see cref="InReplyTo"/> property.</summary>
     */
     [PDF(VersionEnum.PDF16)]
-    public ReplyTypeEnum ReplyType
+    public virtual ReplyTypeEnum ReplyType
     {
       get
       {return ReplyTypeEnumExtension.Get((PdfName)BaseDataObject[PdfName.RT]).Value;}
@@ -152,16 +165,28 @@ namespace org.pdfclown.documents.interaction.annotations
     }
 
     /**
-      <summary>Gets/Sets the text representing a short description of the subject being addressed by
-      the annotation.</summary>
+      <summary>Gets/Sets the annotation subject.</summary>
     */
     [PDF(VersionEnum.PDF15)]
-    public string Subject
+    public virtual string Subject
     {
       get
       {return (string)PdfSimpleObject<object>.GetValue(BaseDataObject[PdfName.Subj]);}
       set
-      {BaseDataObject[PdfName.Subj] = PdfTextString.Get(value);}
+      {
+        BaseDataObject[PdfName.Subj] = PdfTextString.Get(value);
+        ModificationDate = DateTime.Now;
+      }
+    }
+    #endregion
+
+    #region protected
+    protected PdfName TypeBase
+    {
+      get
+      {return (PdfName)BaseDataObject[PdfName.IT];}
+      set
+      {BaseDataObject[PdfName.IT] = value;}
     }
     #endregion
     #endregion
