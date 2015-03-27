@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2013 Stefano Chizzolini. http://www.pdfclown.org
+  Copyright 2008-2015 Stefano Chizzolini. http://www.pdfclown.org
 
   Contributors:
     * Stefano Chizzolini (original code developer, http://www.stefanochizzolini.it)
@@ -38,7 +38,7 @@ namespace org.pdfclown.documents.interaction.annotations
     <remarks>It represents a sticky note attached to a point in the PDF document.</remarks>
   */
   [PDF(VersionEnum.PDF10)]
-  public sealed class Note
+  public sealed class StickyNote
     : Markup
   {
     #region types
@@ -80,11 +80,14 @@ namespace org.pdfclown.documents.interaction.annotations
 
     #region static
     #region fields
+    private static readonly IconTypeEnum DefaultIconType = IconTypeEnum.Note;
+    private static readonly bool DefaultOpen = false;
+
     private static readonly Dictionary<IconTypeEnum,PdfName> IconTypeEnumCodes;
     #endregion
 
     #region constructors
-    static Note()
+    static StickyNote()
     {
       IconTypeEnumCodes = new Dictionary<IconTypeEnum,PdfName>();
       IconTypeEnumCodes[IconTypeEnum.Comment] = PdfName.Comment;
@@ -119,7 +122,7 @@ namespace org.pdfclown.documents.interaction.annotations
         if(iconType.Value.Equals(value))
           return iconType.Key;
       }
-      return IconTypeEnum.Note;
+      return DefaultIconType;
     }
     #endregion
     #endregion
@@ -127,19 +130,19 @@ namespace org.pdfclown.documents.interaction.annotations
 
     #region dynamic
     #region constructors
-    public Note(
+    public StickyNote(
       Page page,
       PointF location,
       string text
       ) : base(
         page,
         PdfName.Text,
-        new RectangleF(location.X,location.Y,0,0),
+        new RectangleF(location.X, location.Y, 0, 0),
         text
         )
     {}
 
-    internal Note(
+    internal StickyNote(
       PdfDirectObject baseObject
       ) : base(baseObject)
     {}
@@ -155,7 +158,7 @@ namespace org.pdfclown.documents.interaction.annotations
       get
       {return ToIconTypeEnum((PdfName)BaseDataObject[PdfName.Name]);}
       set
-      {BaseDataObject[PdfName.Name] = ToCode(value);}
+      {BaseDataObject[PdfName.Name] = (value != DefaultIconType ? ToCode(value) : null);}
     }
 
     /**
@@ -166,12 +169,10 @@ namespace org.pdfclown.documents.interaction.annotations
       get
       {
         PdfBoolean openObject = (PdfBoolean)BaseDataObject[PdfName.Open];
-        return openObject != null
-          ? openObject.BooleanValue
-          : false;
+        return openObject != null ? openObject.BooleanValue : DefaultOpen;
       }
       set
-      {BaseDataObject[PdfName.Open] = PdfBoolean.Get(value);}
+      {BaseDataObject[PdfName.Open] = (value != DefaultOpen ? PdfBoolean.Get(value) : null);}
     }
 
   //TODO:State and StateModel!!!
