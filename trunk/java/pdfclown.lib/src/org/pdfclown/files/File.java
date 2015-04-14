@@ -52,14 +52,14 @@ import org.pdfclown.tokens.Reader.FileInfo;
 import org.pdfclown.tokens.Writer;
 import org.pdfclown.tokens.XRefEntry;
 import org.pdfclown.util.NotImplementedException;
-import org.pdfclown.util.StringUtils;
+import org.pdfclown.util.io.IOUtils;
 
 /**
   PDF file representation.
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.0
-  @version 0.2.0, 03/30/15
+  @version 0.2.0, 04/08/15
 */
 public final class File
   implements Closeable
@@ -310,7 +310,7 @@ public final class File
     catch(Exception e)
     {throw new IOException(file.getPath() + " file serialization failed.", e);}
     finally
-    {try{outputStream.close();}catch(IOException e){/* NOOP */}}
+    {IOUtils.closeQuietly(outputStream);}
   }
 
   /**
