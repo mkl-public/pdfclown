@@ -36,7 +36,7 @@ import org.pdfclown.tokens.Keyword;
   PDF name object [PDF:1.6:3.2.4].
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.2.0, 03/21/15
+  @version 0.2.0, 04/08/15
 */
 public final class PdfName
   extends PdfSimpleObject<String>
@@ -537,6 +537,7 @@ public final class PdfName
   public static final PdfName URL = new PdfName("URL");
   public static final PdfName Usage = new PdfName("Usage");
   public static final PdfName UseAttachments = new PdfName("UseAttachments");
+  public static final PdfName UseCMap = new PdfName("UseCMap");
   public static final PdfName UseNone = new PdfName("UseNone");
   public static final PdfName UseOC = new PdfName("UseOC");
   public static final PdfName UseOutlines = new PdfName("UseOutlines");

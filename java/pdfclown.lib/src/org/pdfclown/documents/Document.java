@@ -57,7 +57,6 @@ import org.pdfclown.objects.PdfReference;
 import org.pdfclown.objects.PdfString;
 import org.pdfclown.objects.Rectangle;
 import org.pdfclown.util.NotImplementedException;
-import org.pdfclown.util.StringUtils;
 
 /**
   PDF document [PDF:1.6:3.6.1].

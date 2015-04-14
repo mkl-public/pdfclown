@@ -28,13 +28,14 @@ package org.pdfclown.documents.contents;
 import org.pdfclown.documents.contents.colorSpaces.Color;
 import org.pdfclown.documents.contents.colorSpaces.ColorSpace;
 import org.pdfclown.documents.contents.fonts.Font;
+import org.pdfclown.tokens.EncodeException;
 
 /**
   Text style.
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.8
-  @version 0.2.0, 03/12/15
+  @version 0.2.0, 04/08/15
 */
 public final class TextStyle
 {
@@ -114,6 +115,11 @@ public final class TextStyle
   public ColorSpace<?> getStrokeColorSpace(
     )
   {return strokeColorSpace;}
+  
+  public double getWidth(
+    char textChar
+    ) throws EncodeException
+  {return font.getWidth(textChar, fontSize) * scaleX / scaleY;}
   // </public>
   // </interface>
   // </dynamic>
