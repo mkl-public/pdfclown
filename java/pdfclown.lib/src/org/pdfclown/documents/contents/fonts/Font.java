@@ -59,7 +59,7 @@ import org.pdfclown.util.NotImplementedException;
   Abstract font [PDF:1.6:5.4].
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
-  @version 0.2.0, 04/08/15
+  @version 0.2.0, 04/16/15
 */
 @PDF(VersionEnum.PDF10)
 public abstract class Font
@@ -894,8 +894,8 @@ public abstract class Font
   }
 
   /**
-    Notifies the loading of font information from an existing PDF font structure.
-   */
+    Notifies font information loading from an existing PDF font structure.
+  */
   protected abstract void onLoad(
     );
   
@@ -932,5 +932,4 @@ public abstract class Font
   // </private>
   // </interface>
   // </dynamic>
-  // </class>
 }
