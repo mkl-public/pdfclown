@@ -59,7 +59,7 @@ import org.pdfclown.util.io.IOUtils;
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.0
-  @version 0.2.0, 04/08/15
+  @version 0.2.0, 04/20/15
 */
 public final class File
   implements Closeable
@@ -230,6 +230,13 @@ public final class File
   public int hashCode(
     )
   {return hashCode;}
+
+  /**
+    Gets whether the initial state of this file has been modified.
+  */
+  public boolean isUpdated(
+    )
+  {return !indirectObjects.getModifiedObjects().isEmpty();}
 
   /**
     Registers an <b>internal data object</b>.
