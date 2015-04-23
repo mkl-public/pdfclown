@@ -149,10 +149,9 @@ public abstract class XObject
   public void setLayer(
     LayerEntity value
     )
-  {getBaseDataObject().getHeader().put(PdfName.OC, value.getBaseObject());}
+  {getBaseDataObject().getHeader().put(PdfName.OC, value != null ? value.getMembership().getBaseObject() : null);}
   // </ILayerable>
   // </public>
   // </interface>
   // </dynamic>
-  // </class>
 }
