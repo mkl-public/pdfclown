@@ -51,7 +51,8 @@ namespace org.pdfclown.documents
   */
   [PDF(VersionEnum.PDF10)]
   public sealed class Document
-    : PdfObjectWrapper<PdfDictionary>
+    : PdfObjectWrapper<PdfDictionary>,
+      IAppDataHolder
   {
     #region types
     /**
@@ -509,6 +510,39 @@ namespace org.pdfclown.documents
       set
       {BaseDataObject[PdfName.ViewerPreferences] = PdfObjectWrapper.GetBaseObject(value);}
     }
+
+    #region IAppDataHolder
+    public AppDataCollection AppData
+    {
+      get
+      {return AppDataCollection.Wrap(BaseDataObject.Get<PdfDictionary>(PdfName.PieceInfo), this);}
+    }
+
+    public AppData GetAppData(
+      PdfName appName
+      )
+    {return AppData.Ensure(appName);}
+
+    public DateTime? ModificationDate
+    {
+      get
+      {return Information.ModificationDate;}
+    }
+
+    public void Touch(
+      PdfName appName
+      )
+    {Touch(appName, DateTime.Now);}
+
+    public void Touch(
+      PdfName appName,
+      DateTime modificationDate
+      )
+    {
+      GetAppData(appName).ModificationDate = modificationDate;
+      Information.ModificationDate = modificationDate;
+    }
+    #endregion
     #endregion
 
     #region private
