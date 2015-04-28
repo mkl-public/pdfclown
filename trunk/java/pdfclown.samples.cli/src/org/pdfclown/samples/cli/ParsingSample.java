@@ -23,6 +23,7 @@ import org.pdfclown.documents.interchange.metadata.Metadata;
 import org.pdfclown.files.File;
 import org.pdfclown.objects.PdfDataObject;
 import org.pdfclown.objects.PdfDictionary;
+import org.pdfclown.objects.PdfDirectObject;
 import org.pdfclown.objects.PdfIndirectObject;
 import org.pdfclown.objects.PdfName;
 import org.pdfclown.objects.PdfObjectWrapper;
@@ -149,7 +150,9 @@ public class ParsingSample
     System.out.println(" Dictionary entries:");
     for(PdfName key : pageDictionary.keySet())
     {System.out.println("  " + key.getValue());}
-
+    for(Map.Entry<PdfName,PdfDirectObject> entry : pageDictionary.entrySet())
+    {System.out.println("  " + entry.getKey().getValue() + " = " + entry.getValue());}
+    
     // 2. Showing page contents information...
     Contents contents = page.getContents();
     System.out.println(" Content objects count: " + contents.size());
