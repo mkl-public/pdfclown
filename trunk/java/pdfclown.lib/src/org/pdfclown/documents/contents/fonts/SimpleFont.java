@@ -47,7 +47,7 @@ import org.pdfclown.util.ByteArray;
 
   @author Stefano Chizzolini (http://www.stefanochizzolini.it)
   @since 0.0.8
-  @version 0.2.0, 04/16/15
+  @version 0.2.0, 04/30/15
 */
 @PDF(VersionEnum.PDF10)
 public abstract class SimpleFont
@@ -93,8 +93,7 @@ public abstract class SimpleFont
     // Mapping character codes...
     PdfDataObject encodingObject = getBaseDataObject().resolve(PdfName.Encoding);
     EnumSet<FlagsEnum> flags = getFlags();
-    symbolic = (flags.contains(FlagsEnum.Symbolic)
-      || (!flags.contains(FlagsEnum.Nonsymbolic) && encodingObject == null));
+    symbolic = flags.contains(FlagsEnum.Symbolic);
     if(codes == null)
     {
       Map<ByteArray,Integer> codes;
