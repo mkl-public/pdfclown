@@ -111,12 +111,12 @@ public final class ContentParser
       return new LocalGraphicsState(
         parseContentObjects()
         );
-    else if(operation instanceof BeginMarkedContent) // Marked-content sequence.
+ /*   else if(operation instanceof BeginMarkedContent) // Marked-content sequence.
       return new MarkedContent(
         (BeginMarkedContent)operation,
         parseContentObjects()
         );
-    else if(operation instanceof BeginInlineImage) // Inline image.
+ */   else if(operation instanceof BeginInlineImage) // Inline image.
       return parseInlineImage();
     else // Single operation.
       return operation;
@@ -135,7 +135,7 @@ public final class ContentParser
       // Multiple-operation graphics object end?
       if(contentObject instanceof EndText // Text.
         || contentObject instanceof RestoreGraphicsState // Local graphics state.
-        || contentObject instanceof EndMarkedContent // End marked-content sequence.
+       /* || contentObject instanceof EndMarkedContent // End marked-content sequence. */
         || contentObject instanceof EndInlineImage) // Inline image.
         return contentObjects;
 
