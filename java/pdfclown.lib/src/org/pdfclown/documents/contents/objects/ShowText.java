@@ -213,7 +213,7 @@ public abstract class ShowText
       state.setTm(tm);
 
       if(this instanceof ShowTextToNextLine)
-      {state.setTlm((AffineTransform)tm.clone());}
+        state.getTlm().concatenate(new AffineTransform(1, 0, 0, 1, 0, -state.getLead())); // was: {state.setTlm((AffineTransform)tm.clone());}
     }
   }
 
