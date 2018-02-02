@@ -27,8 +27,10 @@ package org.pdfclown.tools;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.pdfclown.documents.Document;
@@ -71,7 +73,8 @@ public class FormFlattener
     Fields formFields = form.getFields();
     for(Field field : formFields.values())
     {
-      for(Widget widget : field.getWidgets())
+      List<Widget> widgets = new ArrayList<Widget>(field.getWidgets());
+      for(Widget widget : widgets)
       {
         Page widgetPage = widget.getPage();
         EnumSet<FlagsEnum> flags = widget.getFlags();
