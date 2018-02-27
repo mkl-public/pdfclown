@@ -235,7 +235,7 @@ public abstract class CompositeFont
     }
     // Default glyph width.
     {
-      PdfInteger defaultWidthObject = (PdfInteger)getBaseDataObject().get(PdfName.DW);
+      PdfInteger defaultWidthObject = (PdfInteger)getCIDFontDictionary().get(PdfName.DW);//(PdfInteger)getBaseDataObject().get(PdfName.DW);
       if(defaultWidthObject != null)
       {setDefaultWidth(defaultWidthObject.getIntValue());}
     }
