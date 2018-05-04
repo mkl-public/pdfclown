@@ -145,9 +145,10 @@ public abstract class SimpleFont
     // Purging unused character codes...
     {
       PdfArray glyphWidthObjects = (PdfArray)getBaseDataObject().resolve(PdfName.Widths);
+      PdfInteger firstCharObject = (PdfInteger)getBaseDataObject().get(PdfName.FirstChar);
       if(glyphWidthObjects != null)
       {
-        ByteArray charCode = new ByteArray(new byte[]{(byte)((PdfInteger)getBaseDataObject().get(PdfName.FirstChar)).getIntValue()});
+        ByteArray charCode = new ByteArray(new byte[]{(byte)(firstCharObject != null ? firstCharObject.getIntValue() : 0)});
         for(PdfDirectObject glyphWidthObject : glyphWidthObjects)
         {
           if(((PdfInteger)glyphWidthObject).getValue() == 0)
@@ -174,11 +175,12 @@ public abstract class SimpleFont
     {
       glyphWidths = new Hashtable<Integer,Integer>();
       PdfArray glyphWidthObjects = (PdfArray)getBaseDataObject().resolve(PdfName.Widths);
+      PdfInteger firstCharObject = (PdfInteger)getBaseDataObject().get(PdfName.FirstChar);
       if(glyphWidthObjects != null)
       {
         ByteArray charCode = new ByteArray(
           new byte[]
-          {(byte)((PdfInteger)getBaseDataObject().get(PdfName.FirstChar)).getIntValue()}
+          {(byte)(firstCharObject != null ? firstCharObject.getIntValue() : 0)}
           );
         for(PdfDirectObject glyphWidthObject : glyphWidthObjects)
         {
