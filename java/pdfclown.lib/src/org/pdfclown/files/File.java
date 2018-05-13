@@ -407,12 +407,14 @@ public final class File
       /*
         NOTE: If the temporary file exists (see save() method), it must overwrite the document file.
       */
-      java.io.File sourceFile = new java.io.File(getTempPath());
-      if(sourceFile.exists())
-      {
-        java.io.File targetFile = new java.io.File(path);
-        targetFile.delete();
-        sourceFile.renameTo(targetFile);
+      if (getTempPath() != null) {
+        java.io.File sourceFile = new java.io.File(getTempPath());
+        if(sourceFile.exists())
+        {
+          java.io.File targetFile = new java.io.File(path);
+          targetFile.delete();
+          sourceFile.renameTo(targetFile);
+        }
       }
     }
   }
