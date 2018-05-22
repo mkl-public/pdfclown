@@ -61,7 +61,8 @@ public abstract class ShowText
     */
     void scanChar(
       char textChar,
-      Rectangle2D textCharBox
+      Rectangle2D textCharBox,
+      double alpha
       );
   }
   // </interfaces>
@@ -188,13 +189,27 @@ public abstract class ShowText
             */
             AffineTransform trm = (AffineTransform)ctm.clone(); trm.concatenate(tm);
             double charHeight = font.getHeight(textChar,fontSize);
+
+            double ascent = font.getAscent(fontSize);
+            double x = trm.getTranslateX() + ascent * trm.getShearX();
+            double y = contextHeight - trm.getTranslateY() - ascent * trm.getScaleY();
+            double dx = charWidth * trm.getScaleX();
+            double dy = charWidth * trm.getShearY();
+            double alpha = Math.atan2(dy, dx);
+            double w = Math.sqrt(dx*dx + dy*dy);
+            dx = charHeight * trm.getShearX();
+            dy = charHeight * trm.getScaleY();
+            double h = Math.sqrt(dx*dx + dy*dy);
+            Rectangle2D charBox = new Rectangle2D.Double(x, y, w, h);
+/*
             Rectangle2D charBox = new Rectangle2D.Double(
               trm.getTranslateX(),
               contextHeight - trm.getTranslateY() - font.getAscent(fontSize) * trm.getScaleY(),
               charWidth * trm.getScaleX(),
               charHeight * trm.getScaleY()
               );
-            textScanner.scanChar(textChar,charBox);
+*/
+            textScanner.scanChar(textChar,charBox, alpha);
           }
 
           /*

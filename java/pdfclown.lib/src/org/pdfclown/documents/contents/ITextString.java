@@ -56,4 +56,6 @@ public interface ITextString
   */
   public List<TextChar> getTextChars(
     );
+
+  public double getAlpha();
 }

@@ -30,6 +30,8 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -864,13 +866,15 @@ public final class ContentScanner
             @Override
             public void scanChar(
               char textChar,
-              Rectangle2D textCharBox
+              Rectangle2D textCharBox,
+              double alpha
               )
             {
               textChars.add(
                 new TextChar(
                   textChar,
                   textCharBox,
+                  alpha,
                   style,
                   false
                   )
@@ -882,17 +886,39 @@ public final class ContentScanner
     }
 
     @Override
+    public double getAlpha() {
+        return textChars.isEmpty() ? 0 : textChars.get(0).getAlpha();
+    }
+
+    @Override
     public Rectangle2D getBox(
       )
     {
       if(box == null)
       {
+        AffineTransform rot = null;
+        Rectangle2D tempBox = null;
         for(TextChar textChar : textChars)
         {
-          if(box == null)
-          {box = (Rectangle2D)textChar.getBox().clone();}
-          else
-          {box.add(textChar.getBox());}
+          Rectangle2D thisBox = textChar.getBox();
+          if (rot == null) {
+              rot = AffineTransform.getRotateInstance(textChar.getAlpha(), thisBox.getX(), thisBox.getY());
+              tempBox = (Rectangle2D)thisBox.clone();
+          } else {
+              Point2D corner = new Point2D.Double(thisBox.getX(), thisBox.getY());
+              rot.transform(corner, corner);
+              tempBox.add(new Rectangle2D.Double(corner.getX(), corner.getY(), thisBox.getWidth(), thisBox.getHeight()));
+          }
+        }
+        if (tempBox != null) {
+            try {
+                Point2D corner = new Point2D.Double(tempBox.getX(), tempBox.getY());
+                rot.invert();
+                rot.transform(corner, corner);
+                box = new Rectangle2D.Double(corner.getX(), corner.getY(), tempBox.getWidth(), tempBox.getHeight());
+            } catch (NoninvertibleTransformException e) {
+                e.printStackTrace();
+            }
         }
       }
       return box;

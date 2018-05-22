@@ -122,6 +122,11 @@ public final class TextExtractor
     }
 
     @Override
+    public double getAlpha() {
+        return textChars.isEmpty() ? 0 : textChars.get(0).getAlpha();
+    }
+
+    @Override
     public String getText(
       )
     {

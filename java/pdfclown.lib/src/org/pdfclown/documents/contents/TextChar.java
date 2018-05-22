@@ -44,6 +44,7 @@ public final class TextChar
   private final TextStyle style;
   private final char value;
   private final boolean virtual;
+  private final double alpha;
   // </fields>
 
   // <constructors>
@@ -54,8 +55,20 @@ public final class TextChar
     boolean virtual
     )
   {
+      this(value, box, 0, style, virtual);
+  }
+
+  public TextChar(
+    char value,
+    Rectangle2D box,
+    double alpha,
+    TextStyle style,
+    boolean virtual
+    )
+  {
     this.value = value;
     this.box = box;
+    this.alpha = alpha;
     this.style = style;
     this.virtual = virtual;
   }
@@ -71,6 +84,10 @@ public final class TextChar
   public Rectangle2D getBox(
     )
   {return box;}
+
+  public double getAlpha() {
+      return alpha;
+  }
 
   public TextStyle getStyle(
     )
